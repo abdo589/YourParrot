@@ -2,21 +2,23 @@ import { describe, expect, it } from "vitest";
 import { checkoutSchema, phoneSchema } from "@/lib/validation";
 
 const valid = {
-  name: "أحمد علي",
-  phone: "01012345678",
+  name: "عبدالله القحطاني",
+  phone: "0551234567",
   email: "",
-  governorate: "القاهرة",
-  city: "مدينة نصر",
-  address: "شارع عباس العقاد، عمارة 12، الدور 3",
+  region: "الرياض",
+  city: "الرياض",
+  district: "العليا",
+  address: "طريق الملك فهد، مبنى 2451",
+  postalCode: "12211",
   notes: "",
   items: [{ slug: "budgie", qty: 1 }],
 };
 
 describe("phoneSchema", () => {
-  it.each(["01012345678", "+201112345678", "0020 122 345 6789", "015-1234-5678"])("accepts %s", (p) => {
-    expect(phoneSchema.safeParse(p).success).toBe(true);
+  it.each(["0551234567", "+966551234567", "00966 50 123 4567", "966541234567", "055-123-4567", "٠٥٥١٢٣٤٥٦٧"])("accepts %s", (p) => {
+    expect(phoneSchema.parse(p)).toMatch(/^05\d{8}$/);
   });
-  it.each(["0101234567", "01312345678", "12345678901", "<script>"])("rejects %s", (p) => {
+  it.each(["055123456", "0151234567", "+9660551234567", "01012345678", "<script>"])("rejects %s", (p) => {
     expect(phoneSchema.safeParse(p).success).toBe(false);
   });
 });
@@ -31,8 +33,13 @@ describe("checkoutSchema", () => {
     expect(r.name).toBe("أحمد علي");
   });
 
-  it("rejects unknown governorates, oversize fields and bad cart items", () => {
-    expect(checkoutSchema.safeParse({ ...valid, governorate: "Atlantis" }).success).toBe(false);
+  it("validates the optional postal code", () => {
+    expect(checkoutSchema.safeParse({ ...valid, postalCode: "" }).success).toBe(true);
+    expect(checkoutSchema.safeParse({ ...valid, postalCode: "1234" }).success).toBe(false);
+  });
+
+  it("rejects unknown regions, oversize fields and bad cart items", () => {
+    expect(checkoutSchema.safeParse({ ...valid, region: "Atlantis" }).success).toBe(false);
     expect(checkoutSchema.safeParse({ ...valid, notes: "x".repeat(501) }).success).toBe(false);
     expect(checkoutSchema.safeParse({ ...valid, items: [] }).success).toBe(false);
     expect(checkoutSchema.safeParse({ ...valid, items: [{ slug: "budgie", qty: 0 }] }).success).toBe(false);

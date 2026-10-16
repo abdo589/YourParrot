@@ -34,9 +34,11 @@ export async function placeOrder(_prev: CheckoutState, form: FormData): Promise<
     name: form.get("name") ?? "",
     phone: form.get("phone") ?? "",
     email: form.get("email") ?? "",
-    governorate: form.get("governorate") ?? "",
+    region: form.get("region") ?? "",
     city: form.get("city") ?? "",
+    district: form.get("district") ?? "",
     address: form.get("address") ?? "",
+    postalCode: form.get("postalCode") ?? "",
     notes: form.get("notes") ?? "",
     items: parseItems(form.get("items")),
   });
@@ -71,6 +73,7 @@ export async function placeOrder(_prev: CheckoutState, form: FormData): Promise<
       subtotal: q.subtotal,
       shipping: q.shipping,
       total: q.total,
+      vat: q.vat,
       payment: "cod",
       status: "new",
     });

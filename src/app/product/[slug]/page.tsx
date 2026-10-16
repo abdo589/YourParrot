@@ -54,6 +54,7 @@ export default async function ProductPage({ params }: PageProps<"/product/[slug]
 
           <div className="flex items-baseline gap-3">
             <span className="text-3xl font-extrabold text-brand">{formatPrice(product.price)}</span>
+            <span className="text-xs text-muted">شامل الضريبة</span>
             {product.oldPrice && (
               <>
                 <span className="text-muted line-through">{formatPrice(product.oldPrice)}</span>

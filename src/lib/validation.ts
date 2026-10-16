@@ -1,11 +1,9 @@
 import { z } from "zod";
 import { MAX_QTY_PER_ITEM } from "./products";
 
-export const governorates = [
-  "القاهرة", "الجيزة", "الإسكندرية", "القليوبية", "الشرقية", "الدقهلية", "الغربية",
-  "المنوفية", "البحيرة", "كفر الشيخ", "دمياط", "بورسعيد", "الإسماعيلية", "السويس",
-  "الفيوم", "بني سويف", "المنيا", "أسيوط", "سوهاج", "قنا", "الأقصر", "أسوان",
-  "البحر الأحمر", "مطروح", "شمال سيناء", "جنوب سيناء", "الوادي الجديد",
+export const regions = [
+  "الرياض", "مكة المكرمة", "المدينة المنورة", "القصيم", "المنطقة الشرقية", "عسير", "تبوك",
+  "حائل", "الحدود الشمالية", "جازان", "نجران", "الباحة", "الجوف",
 ] as const;
 
 /** Removes control characters (except newlines/tabs) and trims. */
@@ -27,11 +25,24 @@ const optionalText = (max: number) =>
     .transform(clean)
     .pipe(z.string().max(max, `الحد الأقصى ${max} حرف`));
 
-/** Egyptian mobile numbers: 01[0125]XXXXXXXX, optionally prefixed with +20 / 0020. */
+/** Converts Arabic-Indic / Persian digits to ASCII so "٠٥٥..." is accepted. */
+function asciiDigits(v: string): string {
+  return v.replace(/[\u0660-\u0669\u06F0-\u06F9]/g, (d) => String((d.charCodeAt(0) & 0xf) % 10));
+}
+
+/** Saudi mobile numbers: 05XXXXXXXX, also accepts +966 / 00966 / 966 prefixes. Normalised to 05XXXXXXXX. */
 export const phoneSchema = z
   .string()
-  .transform((v) => v.replace(/[\s-]/g, "").replace(/^(\+20|0020)/, "0"))
-  .pipe(z.string().regex(/^01[0125]\d{8}$/, "رقم موبايل مصري غير صحيح"));
+  .transform((v) => asciiDigits(v).replace(/[\s()-]/g, "").replace(/^(\+966|00966|966)(?=5)/, "0"))
+  .pipe(z.string().regex(/^05\d{8}$/, "رقم جوال سعودي غير صحيح (مثال: 0551234567)"));
+
+/** Saudi postal code (national address): 5 digits, optional. */
+const postalCodeSchema = z
+  .string()
+  .optional()
+  .default("")
+  .transform((v) => asciiDigits(v).replace(/\s/g, ""))
+  .pipe(z.union([z.literal(""), z.string().regex(/^\d{5}$/, "الرمز البريدي 5 أرقام")]));
 
 export const cartLineSchema = z.object({
   slug: z.string().regex(/^[a-z0-9-]{1,64}$/),
@@ -51,9 +62,11 @@ export const checkoutSchema = z.object({
     .default("")
     .transform(clean)
     .pipe(z.union([z.literal(""), z.email("بريد إلكتروني غير صحيح").max(120)])),
-  governorate: z.enum(governorates, { error: "اختر المحافظة" }),
-  city: text(2, 60, "المدينة / المنطقة مطلوبة"),
-  address: text(10, 250, "اكتب العنوان بالتفصيل (10 أحرف على الأقل)"),
+  region: z.enum(regions, { error: "اختر المنطقة" }),
+  city: text(2, 60, "المدينة مطلوبة"),
+  district: text(2, 60, "الحي مطلوب"),
+  address: text(5, 250, "اكتب الشارع ورقم المبنى"),
+  postalCode: postalCodeSchema,
   notes: optionalText(500),
   items: cartSchema.min(1, "السلة فارغة"),
 });

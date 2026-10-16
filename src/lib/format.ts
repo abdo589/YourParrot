@@ -1,17 +1,21 @@
-const egp = new Intl.NumberFormat("ar-EG", {
+// Gregorian calendar + Latin digits, as most Saudi stores display prices and dates.
+const LOCALE = "ar-SA-u-ca-gregory-nu-latn";
+
+const sar = new Intl.NumberFormat(LOCALE, {
   style: "currency",
-  currency: "EGP",
-  maximumFractionDigits: 0,
+  currency: "SAR",
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 0,
 });
 
 export function formatPrice(value: number): string {
-  return egp.format(value);
+  return sar.format(value);
 }
 
-const dateFmt = new Intl.DateTimeFormat("ar-EG", {
+const dateFmt = new Intl.DateTimeFormat(LOCALE, {
   dateStyle: "medium",
   timeStyle: "short",
-  timeZone: "Africa/Cairo",
+  timeZone: "Asia/Riyadh",
 });
 
 export function formatDate(iso: string): string {

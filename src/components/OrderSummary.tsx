@@ -15,6 +15,9 @@ export function OrderSummary({ q, children }: { q: Quote; children?: React.React
         <div className="flex justify-between border-t border-line pt-3 text-base">
           <dt className="font-bold">الإجمالي</dt><dd className="font-extrabold text-brand">{formatPrice(q.total)}</dd>
         </div>
+        <div className="flex justify-between text-xs text-muted">
+          <dt>يشمل ضريبة القيمة المضافة (15%)</dt><dd>{formatPrice(q.vat)}</dd>
+        </div>
       </dl>
       {remaining > 0 && q.subtotal > 0 && (
         <p className="rounded-xl bg-brand-soft p-3 text-xs font-semibold text-brand">

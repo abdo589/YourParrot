@@ -5,14 +5,14 @@ import { useActionState, useEffect, useState } from "react";
 import { placeOrder, type CheckoutState } from "@/app/actions/checkout";
 import { formatPrice } from "@/lib/format";
 import { quote } from "@/lib/pricing";
-import { governorates } from "@/lib/validation";
+import { regions } from "@/lib/validation";
 import { cart, useCart } from "./cart-store";
 import { FormField, Honeypot } from "./FormField";
 import { CheckIcon, LockIcon } from "./icons";
 import { OrderSummary } from "./OrderSummary";
 
 const initial: CheckoutState = { status: "idle" };
-const empty = { name: "", phone: "", email: "", governorate: "", city: "", address: "", notes: "" };
+const empty = { name: "", phone: "", email: "", region: "", city: "", district: "", address: "", postalCode: "", notes: "" };
 
 export function CheckoutForm() {
   const lines = useCart();
@@ -34,7 +34,7 @@ export function CheckoutForm() {
         <p className="mt-2 text-muted">رقم الطلب</p>
         <p className="mt-1 font-mono text-2xl font-bold tracking-widest" dir="ltr">{state.ref}</p>
         <p className="mt-4 leading-7 text-muted">
-          الإجمالي {formatPrice(state.total)} — الدفع عند الاستلام. سيتواصل معك فريقنا خلال 24 ساعة لتأكيد موعد التوصيل.
+          الإجمالي {formatPrice(state.total)} شامل ضريبة القيمة المضافة — الدفع عند الاستلام. سيتواصل معك فريقنا خلال 24 ساعة لتأكيد موعد التوصيل.
         </p>
         <Link href="/shop" className="btn-primary mt-6">متابعة التسوق</Link>
       </div>
@@ -69,7 +69,7 @@ export function CheckoutForm() {
           <FormField name="name" label="الاسم بالكامل" error={err.name}>
             {(p) => <input {...p} className="field" autoComplete="name" required maxLength={80} value={values.name} onChange={set} />}
           </FormField>
-          <FormField name="phone" label="رقم الموبايل" error={err.phone} hint="مثال: 01012345678">
+          <FormField name="phone" label="رقم الجوال" error={err.phone} hint="مثال: 0551234567">
             {(p) => (
               <input {...p} className="field text-left" dir="ltr" type="tel" inputMode="tel" autoComplete="tel" required maxLength={16} value={values.phone} onChange={set} />
             )}
@@ -77,19 +77,27 @@ export function CheckoutForm() {
           <FormField name="email" label="البريد الإلكتروني (اختياري)" error={err.email}>
             {(p) => <input {...p} className="field text-left" dir="ltr" type="email" autoComplete="email" maxLength={120} value={values.email} onChange={set} />}
           </FormField>
-          <FormField name="governorate" label="المحافظة" error={err.governorate}>
+          <FormField name="region" label="المنطقة" error={err.region}>
             {(p) => (
-              <select {...p} className="field" required value={values.governorate} onChange={set}>
-                <option value="" disabled>اختر المحافظة</option>
-                {governorates.map((g) => <option key={g} value={g}>{g}</option>)}
+              <select {...p} className="field" required value={values.region} onChange={set}>
+                <option value="" disabled>اختر المنطقة</option>
+                {regions.map((r) => <option key={r} value={r}>{r}</option>)}
               </select>
             )}
           </FormField>
-          <FormField name="city" label="المدينة / المنطقة" error={err.city}>
+          <FormField name="city" label="المدينة" error={err.city}>
             {(p) => <input {...p} className="field" autoComplete="address-level2" required maxLength={60} value={values.city} onChange={set} />}
           </FormField>
+          <FormField name="district" label="الحي" error={err.district}>
+            {(p) => <input {...p} className="field" autoComplete="address-level3" required maxLength={60} value={values.district} onChange={set} />}
+          </FormField>
+          <FormField name="postalCode" label="الرمز البريدي (اختياري)" error={err.postalCode} hint="من العنوان الوطني — 5 أرقام">
+            {(p) => (
+              <input {...p} className="field text-left" dir="ltr" inputMode="numeric" autoComplete="postal-code" maxLength={5} value={values.postalCode} onChange={set} />
+            )}
+          </FormField>
           <div className="sm:col-span-2">
-            <FormField name="address" label="العنوان بالتفصيل" error={err.address} hint="الشارع، رقم العمارة، الدور، الشقة، علامة مميزة">
+            <FormField name="address" label="الشارع ورقم المبنى" error={err.address} hint="مثال: طريق الملك فهد، مبنى 2451، شقة 7">
               {(p) => <input {...p} className="field" autoComplete="street-address" required maxLength={250} value={values.address} onChange={set} />}
             </FormField>
           </div>
@@ -103,7 +111,7 @@ export function CheckoutForm() {
         <fieldset className="rounded-2xl border border-brand bg-brand-soft/50 p-4">
           <legend className="px-2 text-sm font-bold">طريقة الدفع</legend>
           <label className="flex items-center gap-3 font-semibold">
-            <input type="radio" name="payment" value="cod" defaultChecked className="accent-brand" /> الدفع نقدًا عند الاستلام
+            <input type="radio" name="payment" value="cod" defaultChecked className="accent-brand" /> الدفع عند الاستلام (نقدًا أو مدى)
           </label>
         </fieldset>
 

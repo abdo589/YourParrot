@@ -8,7 +8,7 @@ import { categories, products } from "@/lib/products";
 
 const perks = [
   { icon: ShieldIcon, title: "شهادة صحية لكل طائر", text: "فحص بيطري كامل وحلقة تعريف قبل التسليم." },
-  { icon: TruckIcon, title: "توصيل آمن", text: `لكل المحافظات، ومجاني للطلبات فوق ${formatPrice(FREE_SHIPPING_THRESHOLD)}.` },
+  { icon: TruckIcon, title: "توصيل آمن", text: `لجميع مناطق المملكة، ومجاني للطلبات فوق ${formatPrice(FREE_SHIPPING_THRESHOLD)}.` },
   { icon: HeartIcon, title: "مُربّاة يدويًا", text: "طيور أليفة معتادة على الناس من مزارع موثوقة." },
   { icon: ChatIcon, title: "دعم بعد البيع", text: "متابعة مجانية لمدة شهر ونصائح تغذية ورعاية." },
 ];
@@ -24,7 +24,7 @@ export default function Home() {
         <div className="container-x grid items-center gap-10 py-14 md:grid-cols-2 md:py-20">
           <div className="space-y-6">
             <span className="inline-flex items-center gap-2 rounded-full bg-brand-soft px-4 py-1.5 text-sm font-bold text-brand">
-              <ShieldIcon width={16} height={16} /> طيور مُربّاة في الأسر بشهادات صحية
+              <ShieldIcon width={16} height={16} /> طيور مُربّاة في الأسر بأوراق نظامية وشهادات صحية
             </span>
             <h1 className="text-4xl leading-tight font-extrabold sm:text-5xl">
               رفيقك الملوّن
@@ -32,7 +32,7 @@ export default function Home() {
               <span className="text-brand">يبدأ من هنا.</span>
             </h1>
             <p className="max-w-lg text-lg leading-8 text-muted">
-              ببغاوات أليفة، وأقفاص آمنة، وأغذية متوازنة، وكل ما يحتاجه طائرك ليعيش حياة سعيدة — مع الدفع عند الاستلام.
+              ببغاوات أليفة، وأقفاص آمنة، وأغذية متوازنة، وكل ما يحتاجه طائرك ليعيش حياة سعيدة — مع التوصيل لجميع مناطق المملكة والدفع عند الاستلام.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/shop?c=birds" className="btn-primary px-7 py-3 text-base">تصفّح الببغاوات</Link>
@@ -41,7 +41,7 @@ export default function Home() {
             <dl className="flex gap-8 pt-2">
               <div><dt className="text-xs text-muted">نوع من الطيور</dt><dd className="text-2xl font-extrabold">+6</dd></div>
               <div><dt className="text-xs text-muted">عميل سعيد</dt><dd className="text-2xl font-extrabold">+1,200</dd></div>
-              <div><dt className="text-xs text-muted">محافظة نوصّل لها</dt><dd className="text-2xl font-extrabold">27</dd></div>
+              <div><dt className="text-xs text-muted">منطقة نوصّل لها</dt><dd className="text-2xl font-extrabold">13</dd></div>
             </dl>
           </div>
           <div className="relative mx-auto w-full max-w-md">
@@ -100,9 +100,9 @@ export default function Home() {
         <div className="relative overflow-hidden rounded-[2rem] bg-brand px-8 py-12 text-on-brand sm:px-12">
           <div className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-mango/30" />
           <div className="relative max-w-xl space-y-4">
-            <h2 className="text-3xl font-extrabold">أول ببغاء ليك؟</h2>
+            <h2 className="text-3xl font-extrabold">أول ببغاء لك؟</h2>
             <p className="leading-8 opacity-90">
-              اقرأ دليل الرعاية المختصر، أو كلّمنا ونساعدك تختار النوع المناسب لمساحة بيتك ووقتك.
+              اقرأ دليل الرعاية المختصر، أو تواصل معنا ونساعدك تختار النوع المناسب لمساحة بيتك ووقتك.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/care" className="btn bg-white px-6 py-3 text-black hover:bg-white/90">دليل الرعاية</Link>

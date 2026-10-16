@@ -1,8 +1,10 @@
 import { getProduct, type Product } from "./products";
 import type { CartLine } from "./validation";
 
-export const SHIPPING_FEE = 90;
-export const FREE_SHIPPING_THRESHOLD = 3000;
+export const SHIPPING_FEE = 25;
+export const FREE_SHIPPING_THRESHOLD = 300;
+/** Saudi VAT. All catalog prices and shipping are VAT-inclusive. */
+export const VAT_RATE = 0.15;
 
 export interface PricedLine {
   product: Product;
@@ -15,6 +17,8 @@ export interface Quote {
   subtotal: number;
   shipping: number;
   total: number;
+  /** VAT portion already included in `total`. */
+  vat: number;
   /** Slugs that no longer exist or exceed available stock. */
   problems: { slug: string; reason: "unknown" | "stock" }[];
 }
@@ -42,5 +46,7 @@ export function quote(items: CartLine[]): Quote {
 
   const subtotal = lines.reduce((sum, l) => sum + l.lineTotal, 0);
   const shipping = subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
-  return { lines, subtotal, shipping, total: subtotal + shipping, problems };
+  const total = subtotal + shipping;
+  const vat = Math.round((total - total / (1 + VAT_RATE)) * 100) / 100;
+  return { lines, subtotal, shipping, total, vat, problems };
 }

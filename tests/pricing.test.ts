@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FREE_SHIPPING_THRESHOLD, quote, SHIPPING_FEE } from "@/lib/pricing";
+import { FREE_SHIPPING_THRESHOLD, quote, SHIPPING_FEE, VAT_RATE } from "@/lib/pricing";
 import { getProduct } from "@/lib/products";
 
 describe("quote", () => {
@@ -10,6 +10,12 @@ describe("quote", () => {
     expect(q.shipping).toBe(SHIPPING_FEE);
     expect(q.total).toBe(toy.price * 2 + SHIPPING_FEE);
     expect(q.problems).toEqual([]);
+  });
+
+  it("reports the 15% VAT included in the total", () => {
+    const q = quote([{ slug: "large-steel-cage", qty: 1 }]);
+    expect(q.vat).toBeCloseTo(q.total - q.total / (1 + VAT_RATE), 2);
+    expect(q.vat).toBeCloseTo(189.13, 2);
   });
 
   it("gives free shipping at or above the threshold", () => {

@@ -17,9 +17,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { default: "ببغاوتك | متجر الببغاوات ومستلزماتها", template: "%s | ببغاوتك" },
   description:
-    "متجر ببغاوتك: ببغاوات مُربّاة في الأسر بشهادات صحية، وأقفاص وأغذية وألعاب ومستلزمات عناية، مع الدفع عند الاستلام والتوصيل لكل محافظات مصر.",
+    "متجر ببغاوتك: ببغاوات مُربّاة في الأسر بشهادات صحية، وأقفاص وأغذية وألعاب ومستلزمات عناية، مع التوصيل لجميع مناطق المملكة العربية السعودية والدفع عند الاستلام.",
   applicationName: "YourParrot",
-  openGraph: { type: "website", locale: "ar_EG", siteName: "ببغاوتك" },
+  openGraph: { type: "website", locale: "ar_SA", siteName: "ببغاوتك" },
   robots: { index: true, follow: true },
 };
 

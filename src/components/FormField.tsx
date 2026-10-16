@@ -25,7 +25,7 @@ export function FormField({ name, label, error, hint, children }: Props) {
 /** Off-screen field that bots fill in and humans never see. */
 export function Honeypot() {
   return (
-    <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none absolute top-0 right-0 h-px w-px overflow-hidden opacity-0 [clip-path:inset(50%)]">
       <label>
         Website
         <input type="text" name="website" tabIndex={-1} autoComplete="off" defaultValue="" />

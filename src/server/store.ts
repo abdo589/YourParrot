@@ -15,15 +15,19 @@ export interface OrderRecord {
     name: string;
     phone: string;
     email: string;
-    governorate: string;
+    region: string;
     city: string;
+    district: string;
     address: string;
+    postalCode: string;
     notes: string;
   };
   items: { slug: string; name: string; qty: number; unitPrice: number; lineTotal: number }[];
   subtotal: number;
   shipping: number;
   total: number;
+  /** VAT (15%) included in total */
+  vat: number;
   payment: "cod";
   status: "new";
 }

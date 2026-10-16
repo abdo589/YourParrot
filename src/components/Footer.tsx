@@ -3,6 +3,9 @@ import { categories } from "@/lib/products";
 import { Logo } from "./icons";
 
 export function Footer() {
+  // Saudi e-commerce rules require showing the commercial registration and VAT numbers.
+  const cr = process.env.NEXT_PUBLIC_CR_NUMBER;
+  const vat = process.env.NEXT_PUBLIC_VAT_NUMBER;
   return (
     <footer className="mt-24 border-t border-line bg-surface-2">
       <div className="container-x grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
@@ -41,8 +44,16 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-line py-5 text-center text-xs text-muted">
-        © ببغاوتك YourParrot — جميع الحقوق محفوظة
+      <div className="border-t border-line py-5 text-center text-xs leading-6 text-muted">
+        <p>جميع الأسعار بالريال السعودي وشاملة ضريبة القيمة المضافة 15%.</p>
+        {(cr || vat) && (
+          <p dir="rtl">
+            {cr && <>السجل التجاري: <span dir="ltr">{cr}</span></>}
+            {cr && vat && " · "}
+            {vat && <>الرقم الضريبي: <span dir="ltr">{vat}</span></>}
+          </p>
+        )}
+        <p>© ببغاوتك YourParrot — جميع الحقوق محفوظة</p>
       </div>
     </footer>
   );

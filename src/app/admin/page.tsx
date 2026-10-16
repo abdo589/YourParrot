@@ -45,9 +45,15 @@ export default async function AdminPage() {
                     <td className="p-3 font-mono" dir="ltr">{o.ref}</td>
                     <td className="p-3 whitespace-nowrap">{formatDate(o.createdAt)}</td>
                     <td className="p-3">{o.customer.name}<div className="text-muted" dir="ltr">{o.customer.phone}</div></td>
-                    <td className="p-3">{o.customer.governorate} — {o.customer.city}<div className="text-muted">{o.customer.address}</div></td>
+                    <td className="p-3">
+                      {o.customer.region} — {o.customer.city}، {o.customer.district}
+                      <div className="text-muted">{o.customer.address}{o.customer.postalCode && ` — ${o.customer.postalCode}`}</div>
+                    </td>
                     <td className="p-3">{o.items.map((i) => <div key={i.slug}>{i.name} × {i.qty}</div>)}</td>
-                    <td className="p-3 font-bold">{formatPrice(o.total)}</td>
+                    <td className="p-3 font-bold">
+                      {formatPrice(o.total)}
+                      <div className="text-xs font-normal text-muted">ضريبة {formatPrice(o.vat ?? 0)}</div>
+                    </td>
                   </tr>
                 ))}
               </tbody>

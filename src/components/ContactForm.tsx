@@ -18,7 +18,7 @@ export function ContactForm() {
       <div className="card p-8 text-center" role="status">
         <CheckIcon width={40} height={40} className="mx-auto text-brand" />
         <p className="mt-3 text-lg font-bold">وصلتنا رسالتك، شكرًا لك!</p>
-        <p className="mt-1 text-muted">هنتواصل معاك في أقرب وقت.</p>
+        <p className="mt-1 text-muted">سنتواصل معك في أقرب وقت.</p>
       </div>
     );
   }
@@ -34,7 +34,7 @@ export function ContactForm() {
       <FormField name="name" label="الاسم" error={err.name}>
         {(p) => <input {...p} className="field" autoComplete="name" maxLength={80} value={values.name} onChange={set} />}
       </FormField>
-      <FormField name="phone" label="رقم الموبايل" error={err.phone}>
+      <FormField name="phone" label="رقم الجوال" error={err.phone}>
         {(p) => <input {...p} className="field text-left" dir="ltr" type="tel" autoComplete="tel" maxLength={16} value={values.phone} onChange={set} />}
       </FormField>
       <FormField name="message" label="رسالتك" error={err.message}>
