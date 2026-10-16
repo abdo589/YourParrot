@@ -10,6 +10,7 @@ const valid = {
   district: "العليا",
   address: "طريق الملك فهد، مبنى 2451",
   postalCode: "12211",
+  payment: "cod",
   notes: "",
   items: [{ slug: "budgie", qty: 1 }],
 };
@@ -40,6 +41,7 @@ describe("checkoutSchema", () => {
 
   it("rejects unknown regions, oversize fields and bad cart items", () => {
     expect(checkoutSchema.safeParse({ ...valid, region: "Atlantis" }).success).toBe(false);
+    expect(checkoutSchema.safeParse({ ...valid, payment: "crypto" }).success).toBe(false);
     expect(checkoutSchema.safeParse({ ...valid, notes: "x".repeat(501) }).success).toBe(false);
     expect(checkoutSchema.safeParse({ ...valid, items: [] }).success).toBe(false);
     expect(checkoutSchema.safeParse({ ...valid, items: [{ slug: "budgie", qty: 0 }] }).success).toBe(false);

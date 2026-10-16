@@ -39,7 +39,7 @@ export function Footer() {
           <h2 className="mb-3 font-bold">التزامنا</h2>
           <ul className="space-y-2 text-sm leading-6 text-muted">
             <li>طيور مُربّاة في الأسر فقط — لا نتعامل في طيور مصطادة من البرية.</li>
-            <li>الدفع عند الاستلام والمعاينة.</li>
+            <li>ادفع إلكترونيًا بمدى وApple Pay، أو عند الاستلام.</li>
             <li>بياناتك محمية ولا نشاركها مع أي طرف.</li>
           </ul>
         </div>

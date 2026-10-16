@@ -98,7 +98,7 @@ export default async function ProductPage({ params }: PageProps<"/product/[slug]
           </dl>
 
           <div className="grid gap-3 text-sm sm:grid-cols-2">
-            <div className="flex items-center gap-2 rounded-2xl bg-surface-2 p-3"><TruckIcon className="text-brand" /> الدفع عند الاستلام والمعاينة</div>
+            <div className="flex items-center gap-2 rounded-2xl bg-surface-2 p-3"><TruckIcon className="text-brand" /> مدى وApple Pay أو الدفع عند الاستلام</div>
             <div className="flex items-center gap-2 rounded-2xl bg-surface-2 p-3"><ShieldIcon className="text-brand" /> ضمان واسترجاع خلال 3 أيام</div>
           </div>
         </div>

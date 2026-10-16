@@ -68,6 +68,7 @@ export const checkoutSchema = z.object({
   address: text(5, 250, "اكتب الشارع ورقم المبنى"),
   postalCode: postalCodeSchema,
   notes: optionalText(500),
+  payment: z.enum(["cod", "online"], { error: "اختر طريقة الدفع" }),
   items: cartSchema.min(1, "السلة فارغة"),
 });
 

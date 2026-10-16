@@ -7,11 +7,19 @@ import { listMessages, listOrders } from "@/server/store";
 
 export const metadata: Metadata = { title: "لوحة التحكم", robots: { index: false, follow: false } };
 
+const statusLabel = {
+  new: { text: "جديد — دفع عند الاستلام", cls: "bg-surface-2 text-ink" },
+  paid: { text: "مدفوع إلكترونيًا", cls: "bg-brand-soft text-brand" },
+  pending_payment: { text: "بانتظار الدفع", cls: "bg-mango/20 text-ink" },
+  payment_failed: { text: "فشل الدفع", cls: "bg-danger/10 text-danger" },
+} as const;
+
 export default async function AdminPage() {
   if (!(await isAdmin())) redirect("/admin/login");
 
   const [orders, messages] = await Promise.all([listOrders(), listMessages()]);
-  const revenue = orders.reduce((s, o) => s + o.total, 0);
+  // Unpaid online orders are not real sales yet.
+  const revenue = orders.filter((o) => o.status === "new" || o.status === "paid").reduce((s, o) => s + o.total, 0);
 
   return (
     <div className="container-x space-y-10 py-10">
@@ -32,11 +40,11 @@ export default async function AdminPage() {
           <p className="card p-6 text-muted">لا توجد طلبات بعد.</p>
         ) : (
           <div className="card overflow-x-auto">
-            <table className="w-full min-w-[720px] text-sm">
+            <table className="w-full min-w-[860px] text-sm">
               <thead className="bg-surface-2 text-right">
                 <tr>
                   <th className="p-3">رقم الطلب</th><th className="p-3">التاريخ</th><th className="p-3">العميل</th>
-                  <th className="p-3">العنوان</th><th className="p-3">المنتجات</th><th className="p-3">الإجمالي</th>
+                  <th className="p-3">العنوان</th><th className="p-3">المنتجات</th><th className="p-3">الحالة</th><th className="p-3">الإجمالي</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line">
@@ -50,6 +58,12 @@ export default async function AdminPage() {
                       <div className="text-muted">{o.customer.address}{o.customer.postalCode && ` — ${o.customer.postalCode}`}</div>
                     </td>
                     <td className="p-3">{o.items.map((i) => <div key={i.slug}>{i.name} × {i.qty}</div>)}</td>
+                    <td className="p-3">
+                      <span className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold whitespace-nowrap ${(statusLabel[o.status] ?? statusLabel.new).cls}`}>
+                        {(statusLabel[o.status] ?? statusLabel.new).text}
+                      </span>
+                      {o.paymentId && <div className="mt-1 font-mono text-[10px] text-muted" dir="ltr">{o.paymentId}</div>}
+                    </td>
                     <td className="p-3 font-bold">
                       {formatPrice(o.total)}
                       <div className="text-xs font-normal text-muted">ضريبة {formatPrice(o.vat ?? 0)}</div>

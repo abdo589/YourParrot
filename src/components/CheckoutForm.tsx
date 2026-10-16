@@ -13,16 +13,32 @@ import { OrderSummary } from "./OrderSummary";
 
 const initial: CheckoutState = { status: "idle" };
 const empty = { name: "", phone: "", email: "", region: "", city: "", district: "", address: "", postalCode: "", notes: "" };
+const walletBadges = ["مدى", "Apple Pay", "Visa", "Mastercard", "STC Pay"];
 
-export function CheckoutForm() {
+export function CheckoutForm({ onlineEnabled }: { onlineEnabled: boolean }) {
   const lines = useCart();
   const q = quote(lines);
   const [state, action, pending] = useActionState(placeOrder, initial);
   const [values, setValues] = useState(empty);
+  const [payment, setPayment] = useState<"online" | "cod">(onlineEnabled ? "online" : "cod");
 
   useEffect(() => {
     if (state.status === "success") cart.clear();
+    // The server only returns URLs on the payment gateway's own domain.
+    if (state.status === "redirect") window.location.assign(state.url);
   }, [state]);
+
+  if (state.status === "redirect") {
+    return (
+      <div className="card mx-auto max-w-lg p-10 text-center" role="status">
+        <LockIcon width={36} height={36} className="mx-auto text-brand" />
+        <p className="mt-4 text-lg font-bold">جارٍ تحويلك إلى صفحة الدفع الآمنة...</p>
+        <p className="mt-2 text-sm text-muted">
+          إذا لم يتم التحويل تلقائيًا <a href={state.url} className="font-bold text-brand underline">اضغط هنا</a>.
+        </p>
+      </div>
+    );
+  }
 
   if (state.status === "success") {
     return (
@@ -36,7 +52,10 @@ export function CheckoutForm() {
         <p className="mt-4 leading-7 text-muted">
           الإجمالي {formatPrice(state.total)} شامل ضريبة القيمة المضافة — الدفع عند الاستلام. سيتواصل معك فريقنا خلال 24 ساعة لتأكيد موعد التوصيل.
         </p>
-        <Link href="/shop" className="btn-primary mt-6">متابعة التسوق</Link>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Link href={state.orderUrl} className="btn-ghost">تفاصيل الطلب</Link>
+          <Link href="/shop" className="btn-primary">متابعة التسوق</Link>
+        </div>
       </div>
     );
   }
@@ -108,11 +127,39 @@ export function CheckoutForm() {
           </div>
         </div>
 
-        <fieldset className="rounded-2xl border border-brand bg-brand-soft/50 p-4">
-          <legend className="px-2 text-sm font-bold">طريقة الدفع</legend>
-          <label className="flex items-center gap-3 font-semibold">
-            <input type="radio" name="payment" value="cod" defaultChecked className="accent-brand" /> الدفع عند الاستلام (نقدًا أو مدى)
+        <fieldset className="space-y-3">
+          <legend className="mb-3 text-sm font-bold">طريقة الدفع</legend>
+          <label
+            className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-4 has-checked:border-brand has-checked:bg-brand-soft/50 ${
+              onlineEnabled ? "border-line" : "cursor-not-allowed border-line opacity-60"
+            }`}
+          >
+            <input
+              type="radio"
+              name="payment"
+              value="online"
+              checked={payment === "online"}
+              onChange={() => setPayment("online")}
+              disabled={!onlineEnabled}
+              className="mt-1.5 accent-brand"
+            />
+            <span className="flex-1">
+              <span className="font-semibold">الدفع الإلكتروني</span>
+              <span className="mt-2 flex flex-wrap gap-1.5" aria-label="وسائل الدفع المدعومة">
+                {walletBadges.map((b) => (
+                  <span key={b} className="rounded-md border border-line bg-surface px-2 py-0.5 text-xs font-bold" dir="ltr">{b}</span>
+                ))}
+              </span>
+              <span className="mt-2 block text-xs text-muted">
+                {onlineEnabled ? "ستنتقل إلى صفحة دفع آمنة ومشفّرة من ميسّر — لا نحفظ بيانات بطاقتك." : "غير متاح حاليًا."}
+              </span>
+            </span>
           </label>
+          <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-line p-4 has-checked:border-brand has-checked:bg-brand-soft/50">
+            <input type="radio" name="payment" value="cod" checked={payment === "cod"} onChange={() => setPayment("cod")} className="accent-brand" />
+            <span className="font-semibold">الدفع عند الاستلام (نقدًا أو مدى)</span>
+          </label>
+          {err.payment && <p className="text-sm font-semibold text-danger">{err.payment}</p>}
         </fieldset>
 
         <input type="hidden" name="items" value={JSON.stringify(lines)} />
@@ -129,7 +176,7 @@ export function CheckoutForm() {
           ))}
         </ul>
         <button type="submit" className="btn-primary w-full py-3 text-base" disabled={pending}>
-          {pending ? "جارٍ إرسال الطلب..." : "تأكيد الطلب"}
+          {pending ? "جارٍ إرسال الطلب..." : payment === "online" ? `ادفع ${formatPrice(q.total)}` : "تأكيد الطلب"}
         </button>
         <p className="flex items-center justify-center gap-1.5 text-xs text-muted">
           <LockIcon width={14} height={14} /> بياناتك مشفّرة ولا تُشارك مع أي طرف
