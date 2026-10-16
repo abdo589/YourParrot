@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #fbf8f1;
+  --surface: #ffffff;
+  --surface-2: #f3eee2;
+  --ink: #17251d;
+  --muted: #5a6a60;
+  --line: #e7e0cf;
+  --brand: #11734a;
+  --brand-strong: #0a5034;
+  --brand-soft: #dff1e7;
+  --mango: #f2a51a;
+  --coral: #e2543a;
+  --danger: #b42318;
+  --on-brand: #ffffff;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1612;
+    --surface: #15201a;
+    --surface-2: #1b2921;
+    --ink: #ecf2ee;
+    --muted: #9fb2a7;
+    --line: #26362d;
+    --brand: #39c286;
+    --brand-strong: #6fdcab;
+    --brand-soft: #173a29;
+    --mango: #f5b63d;
+    --coral: #f07a5f;
+    --danger: #f97066;
+    --on-brand: #06261a;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-mango: var(--mango);
+  --color-coral: var(--coral);
+  --color-danger: var(--danger);
+  --color-on-brand: var(--on-brand);
+  --font-sans: var(--font-cairo), system-ui, "Segoe UI", Tahoma, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@utility container-x {
+  @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-60;
+}
+@utility btn-primary {
+  @apply btn bg-brand text-on-brand hover:bg-brand-strong;
+}
+@utility btn-ghost {
+  @apply btn border border-line bg-surface text-ink hover:border-brand hover:text-brand;
+}
+@utility field {
+  @apply w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-ink placeholder:text-muted/70 focus:border-brand focus:ring-2 focus:ring-brand/25 focus:outline-none aria-invalid:border-danger;
+}
+@utility label {
+  @apply mb-1.5 block text-sm font-semibold;
+}
+@utility card {
+  @apply rounded-3xl border border-line bg-surface;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(-2deg); }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
