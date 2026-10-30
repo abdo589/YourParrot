@@ -130,6 +130,23 @@ BANK_FEED_URL / BANK_FEED_TOKEN               # optional bank aggregator feed
    `/iclock/*` to the `iclock` function (replace `YOUR-PROJECT`). Approve the device serial in
    **Attendance → Devices**, and set each employee's device PIN.
 
+## Deploying to Vercel
+
+The repo deploys with no settings: `vercel.json` sets the Vite build, SPA routing, the `/iclock`
+proxy to the Supabase function, cache and security headers, and `.env.production` supplies the
+public Supabase URL and anon key.
+
+1. vercel.com → **Add New → Project** → import `abdo589/YourParrot`, branch `claude/new-session-98nhmx`
+   (or `main` after merging) → **Deploy**.
+2. In Supabase → **Authentication → URL Configuration**, set **Site URL** to the Vercel domain and add
+   `https://<domain>/**` to **Redirect URLs** (needed for sign-up confirmation emails).
+3. Set the `APP_URL` function secret to the same domain (Outlook redirects back there).
+
+ZKTeco devices: Vercel serves HTTPS only and redirects plain HTTP. Many ZKTeco firmwares push over
+plain HTTP and don't follow redirects; for those, point the device at
+`wnhnwccevfklkwnodhpw.supabase.co` with path prefix `/functions/v1` if the firmware allows it, or put a
+small HTTP→HTTPS relay on the office network.
+
 ## Testing
 
 ```bash
