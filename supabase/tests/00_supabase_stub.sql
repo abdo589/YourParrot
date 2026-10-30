@@ -1,0 +1,23 @@
+-- Minimal stand-in for the Supabase platform schemas so the migrations and
+-- tests/rls_behaviour.sql can run on a plain local PostgreSQL 15+:
+--   createdb mf && psql -d mf -f supabase/tests/00_supabase_stub.sql
+--   for f in supabase/migrations/*.sql; do psql -d mf -v ON_ERROR_STOP=1 -f $f; done
+--   psql -d mf -f supabase/tests/rls_behaviour.sql
+do $$ begin
+  if not exists (select 1 from pg_roles where rolname = 'anon') then create role anon nologin; end if;
+  if not exists (select 1 from pg_roles where rolname = 'authenticated') then create role authenticated nologin; end if;
+  if not exists (select 1 from pg_roles where rolname = 'service_role') then create role service_role nologin bypassrls; end if;
+end $$;
+create schema auth; create schema storage;
+create table auth.users(id uuid primary key default gen_random_uuid(), email text, raw_user_meta_data jsonb default '{}', email_confirmed_at timestamptz);
+create table auth.sessions(id uuid primary key default gen_random_uuid(), user_id uuid);
+create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub', true),'')::uuid $$;
+create table storage.buckets(id text primary key, name text, public bool, file_size_limit bigint);
+create table storage.objects(id uuid primary key default gen_random_uuid(), bucket_id text, name text);
+alter table storage.objects enable row level security;
+create function storage.foldername(name text) returns text[] language sql immutable as $$ select string_to_array(name,'/') $$;
+create publication supabase_realtime;
+grant usage on schema public, auth to authenticated, anon;
+grant select on auth.users to authenticated;
+alter default privileges in schema public grant all on tables to authenticated, anon;
+alter default privileges in schema public grant all on sequences to authenticated, anon;

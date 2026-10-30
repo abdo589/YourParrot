@@ -1,0 +1,12 @@
+# Edge functions that are called without a Supabase JWT check them themselves.
+[functions.iclock]
+verify_jwt = false        # ZKTeco devices; gated by approved serial numbers
+
+[functions.phone-checkin]
+verify_jwt = false        # secret per-employee link, or a user JWT for "My check-in"
+
+[functions.outlook]
+verify_jwt = false        # Microsoft OAuth callback; other actions verify the caller
+
+[functions.mcp]
+verify_jwt = true
