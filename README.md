@@ -102,6 +102,12 @@ APP_URL                # where the app is hosted (Outlook redirect back)
 BANK_FEED_URL / BANK_FEED_TOKEN               # optional bank aggregator feed
 ```
 
+## Live project
+
+* Supabase project: `metal-fuze-projects` (ref `wnhnwccevfklkwnodhpw`, region eu-central-1).
+* Schema (`supabase/full_schema.sql`, including `20261030000008_hardening.sql`) and all 12 edge functions are deployed.
+* `.env.example` already points at this project — copy it to `.env.local` to run the app against it.
+
 ## Setup
 
 1. Create a Supabase project, then link and push:

@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/iclock/:path*", "destination": "https://YOUR-PROJECT.supabase.co/functions/v1/iclock/:path*" },
+    { "source": "/iclock/:path*", "destination": "https://wnhnwccevfklkwnodhpw.supabase.co/functions/v1/iclock/:path*" },
     { "source": "/((?!iclock|assets|fonts|icons|sw.js|manifest.webmanifest).*)", "destination": "/index.html" }
   ]
 }
